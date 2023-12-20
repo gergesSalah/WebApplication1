@@ -1,0 +1,111 @@
+﻿@model IEnumerable<WebApplication1.Models.Teacher>
+
+<div id="alert" class="alert text-center collapse">
+    
+</div>
+
+<form >
+    <div class="row">
+        <div class="form-group col-6">
+            <label for="inputEmail4">Email</label>
+            <input type="text" class="form-control" id="inputEmail4" placeholder="Email">
+        </div>
+        <div class="form-group col-6">
+            <label for="inputName">Name</label>
+            <input type="text" class="form-control" id="inputName" placeholder="Name">
+        </div>
+        
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6 text-center">
+            <label for="inputPhone">phone</label>
+            <input type="number" class="form-control" id="inputPhone" placeholder="Phone">
+        </div>
+
+        <div class="col-md-6">
+            <label for="selectTeacher">Techer</label>
+            <select id="selectTeacher" class="form-control">
+                <option value="0">choose a Teacher</option>
+                @foreach(Teacher teach in Model)
+                {
+                    <option value="@teach.Id">@teach.Name</option>
+
+                }
+            </select>
+        </div>
+
+    </div>
+    
+  
+    <div class="form-group">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="gridCheck">
+            <label class="form-check-label" for="gridCheck">
+                Check me out
+            </label>
+        </div>
+    </div>
+    <div class="text-center">
+    <button id="Submit" type="button" class="btn btn-primary text-center">Add Student</button>
+
+    </div>
+</form>
+
+
+<script>
+    // function AddStudent(){
+
+        $("#Submit").click(function(){
+            debugger
+            $.ajax({
+                url: "/Student/Create",
+                type: "post",
+                data: {
+                    student: {
+                        TeL: $("#inputPhone").val(),
+                        Email: $("#inputEmail4").val(),
+                        Name: $("#inputName").val(),
+                        TeacherId: $("#selectTeacher").val()
+                    }
+                },
+                success: (res) => {
+                    debugger
+                    $("#alert").html(`<h2>${res.message}</h2>`)
+                    $("#alert").collapse("show")
+
+                    if (res.status == 200) {
+                        $("#alert").removeClass("alert-danger")
+                        $("#alert").addClass("alert-success")
+                    }
+                    else {
+                        $("#alert").removeClass("alert-success")
+                        $("#alert").addClass("alert-danger")
+
+                    }
+                    setTimeout(function(){
+                        debugger
+                        $("#alert").collapse("hide")
+                        window.location.reload();
+
+                    },2000)
+                }
+
+            })
+        })
+    // }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

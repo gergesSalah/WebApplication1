@@ -1,0 +1,147 @@
+﻿
+@{
+    ViewData["Title"] = "Index2";
+}
+
+<h1>Index2</h1>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+
+<button onclick="AddBobUp()" class=" btn btn-primary float-end" >Add student</button>
+<br />
+<br />
+
+<hr />
+
+
+<div id="alert" class="alert text-center collapse">
+</div>
+
+<table id="DataTable1" class="table table-striped table-hover">
+    <thead>
+        <tr class="bg-dark">
+            <th>
+                Student ID
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Telephone
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Teacher
+            </th>
+            <th>
+                Update
+            </th>
+            <th>
+                Delete
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var stdn in Model)
+        {
+            <tr>
+                <td>
+                    @stdn.Id
+                </td>
+                <td>
+                    @stdn.Name
+                </td>
+                <td>
+                    @stdn.TeL
+                </td>
+                <td>
+                    @stdn.Email
+                </td>
+                <td>
+                    @stdn.Teacher?.Name
+                </td>
+                <td>
+                    <button class="btn btn-warning" onclick="UpdatePopUp(`@stdn.Id`)">Update</button>
+                </td>
+                <td>
+                    <button class="btn btn-danger" onclick="DeletePopUp(`@stdn.Id`)">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<script src="https://releases.jquery.com/git/jquery-git.slim.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+<script>
+    $('#DataTable1').DataTable({
+        
+    });
+
+    function AddBobUp(){
+        debugger
+        $.ajax({
+            url: "/Student/Create",
+            type:"get",
+            data: {
+
+            },
+            success: (res) => {
+                debugger
+                showModal("add Student",res)
+            }
+        })
+    }
+
+    function UpdatePopUp(studId) {
+        
+        $.ajax({
+            url: "/Student/Update",
+            type:"get",
+            data: {
+                StudentId: studId
+            },
+            success: (res) => {
+                debugger
+                showModal("add Student",res)
+            }
+        })
+    }
+
+    function DeletePopUp(StudId) {
+        
+        $.ajax({
+            url: "/Student/Delete",
+            type:"post",
+            data: {
+                studentId: StudId
+            },
+            success: (res) => {
+                debugger
+                $("#alert").html(`<h2>${res.message}</h2>`)
+                $("#alert").collapse("show")
+
+                if (res.status == 200) {
+                    $("#alert").removeClass("alert-danger")
+                    $("#alert").addClass("alert-success")
+                }
+                else {
+                    $("#alert").removeClass("alert-success")
+                    $("#alert").addClass("alert-danger")
+
+                }
+                setTimeout(function () {
+                    $("#alert").collapse("hide")
+                    window.location.reload();
+
+                }, 2000)
+            }
+        })
+    }
+
+    // $('#DataTable1').DataTable();
+    // let table = new DataTable('#DataTable1');
+</script>

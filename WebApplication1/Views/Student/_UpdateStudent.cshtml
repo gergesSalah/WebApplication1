@@ -1,0 +1,122 @@
+﻿@model IEnumerable<WebApplication1.Models.Teacher>
+
+<div id="alert" class="alert text-center collapse">
+    
+</div>
+
+<form >
+    <div class="row">
+        <div class="form-group col-6">
+            <label for="inputEmail4">Email</label>
+            <input type="text" class="form-control" id="inputEmail4" value="@ViewBag.Student.Email" placeholder="Email">
+        </div>
+        <div class="form-group col-6">
+            <label for="inputName">Name</label>
+            <input type="text" class="form-control" id="inputName" value="@ViewBag.Student.Name" placeholder="Name">
+        </div>
+        
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6 text-center">
+            <label for="inputPhone">phone</label>
+            <input type="text" class="form-control" id="inputPhone" value="@ViewBag.Student.TeL" placeholder="Phone">
+        </div>
+
+        <div class="col-md-6">
+            <label for="selectTeacher">Techer</label>
+            <select id="selectTeacher" class="form-control">
+                <option value="0">choose a Teacher</option>
+                @foreach(Teacher teach in Model)
+                {
+                    if (ViewBag.Student.TeacherId == teach.Id)
+                    {
+                        <option value="@teach.Id" selected>@teach.Name</option>
+
+                    }
+                    else
+                    {
+                    <option value="@teach.Id">@teach.Name</option>
+                        
+                    }
+
+                }
+            </select>
+        </div>
+
+    </div>
+    
+  
+    <div class="form-group">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="gridCheck">
+            <label class="form-check-label" for="gridCheck">
+                Check me out
+            </label>
+        </div>
+    </div>
+    <div class="text-center">
+    <button id="Submit" type="button" class="btn btn-primary text-center">Update Student</button>
+
+    </div>
+</form>
+
+
+<script>
+    // function AddStudent(){
+
+        $("#Submit").click(function(){
+            debugger
+            let TeacherId = ($("#selectTeacher").val() == 0)?null:$("#selectTeacher").val()
+            $.ajax({
+                url: "/Student/Update",
+                type: "post",
+                data: {
+                    student: {
+                        Id: '@ViewBag.Student.Id',
+                        TeL: $("#inputPhone").val(),
+                        Email: $("#inputEmail4").val(),
+                        Name: $("#inputName").val(),
+                        TeacherId: TeacherId,
+                    }
+                },
+                success: (res) => {
+                    debugger
+                    $("#alert").html(`<h2>${res.message}</h2>`)
+                    $("#alert").collapse("show")
+
+                    if (res.status == 200) {
+                        $("#alert").removeClass("alert-danger")
+                        $("#alert").addClass("alert-success")
+                    }
+                    else {
+                        $("#alert").removeClass("alert-success")
+                        $("#alert").addClass("alert-danger")
+
+                    }
+
+                    setTimeout(function(){
+                        $("#alert").collapse("hide")
+                        window.location.reload();
+
+                    },2000)
+                }
+
+            })
+        })
+    // }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
