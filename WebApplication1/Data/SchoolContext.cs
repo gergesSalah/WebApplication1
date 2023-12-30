@@ -28,6 +28,7 @@ public partial class SchoolContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //modelBuilder.Entity<Student>().ToTable("students");
 
         modelBuilder.Entity<Student>().Property(p => p.Id).ValueGeneratedOnAdd()
     .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);

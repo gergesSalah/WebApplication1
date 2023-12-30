@@ -17,6 +17,6 @@ namespace WebApplication1.DTO
 
         public string? Name { get; set; }
 
-        public Teacher? Teacher { get; set; }
+        public string TeacherName { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Runtime.CompilerServices;
 using WebApplication1.Data;
 using WebApplication1.DTO;
 using WebApplication1.Models;
@@ -15,6 +16,7 @@ namespace WebApplication1.Controllers
         {
             //List<Student> students = SchoolContext.Students.ToList();
             //var f = SchoolContext.Students.FromSqlRaw("select students.Id,students.Name,students.Email,students.TeL ,students.TeacherId,Teacher.Name Teacher from students join Teacher on (students.TeacherId = Teacher.ID)").ToList();
+            //List<Student> studentss = SchoolContext.Students.ToList();
             List<Student> students = SchoolContext.Students.Include(std => std.Teacher).ToList();
             
             return View(students);
@@ -24,8 +26,25 @@ namespace WebApplication1.Controllers
         {
             //List<Student> students = SchoolContext.Students.ToList();
             List<Student> students = SchoolContext.Students.Include(std => std.Teacher).ToList();
+            var students2 = (from s in SchoolContext.Students
+                            join t in SchoolContext.Teachers
+                            on s.TeacherId equals t.Id into studentsTeachers
+                            from st in studentsTeachers.DefaultIfEmpty() select new StudentTeacher
+                            {
+                                Id = s.Id,
+                                Name = s.Name,
+                                Email = s.Email,
+                                TeacherId = st.Id,
+                                TeacherName = st.Name,
+                                TeL = s.TeL
 
-            return View(students);
+                            }).ToList();
+
+            
+
+                //List<Student> students3 = SchoolContext.Database.SqlQuery<Student>(FormattableStringFactory.Create("select * from students")).ToList();
+            
+            return View(students2);
         }
 
 
